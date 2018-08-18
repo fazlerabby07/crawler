@@ -7,7 +7,7 @@ const crawler= async function(req, res){
     try {
         let browser, page;
         browser = await puppeteer.launch({
-            // headless: false,
+            headless: false,
         });
         page = await browser.newPage();
         await page.goto('https://www.dsebd.org/data_archive.php');

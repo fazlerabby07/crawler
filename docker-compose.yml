@@ -2,14 +2,14 @@ version: '3'
 services:
   db:
     image: mysql:5.7
-    restart: always
+    expose:
+      - 3306
     environment:
-      MYSQL_USER: root
-      MYSQL_DATABASE: dse
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "dse"
+      MYSQL_PASSWORD: "root"
     ports:
-    - '3306:33600'
+      - "3307:3306"
   node:
     container_name: test-node-mysql
     build: .
@@ -17,4 +17,9 @@ services:
     ports:
       - '3000:3000'
     links:
-    - db:mysql
+      - db
+    environment:
+      CONNECTION_STRING_DEV: mysql://root:root@db:3306/dse
+      port: 3000
+    command: ["./wait-for.sh", "-t", "0", "db:3306", "--", "npm", "run", "dev"]
+    # command: ["npm", "run", "dev"]
